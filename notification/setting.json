@@ -3,17 +3,17 @@
         {
             "condition": "当考试开始时",
             "time": 0,
-            "audio": "start.mp3"
+            "audio": "考试开始"
         },
         {
             "condition": "当距考试结束时间还有",
             "time": 15,
-            "audio": "15min_left.mp3"
+            "audio": "距离结束还有15分钟"
         },
         {
             "condition": "当考试结束时",
             "time": 0,
-            "audio": "end.mp3"
+            "audio": "考试结束"
         }
     ]
 }
