@@ -1,3 +1,31 @@
+document.addEventListener('DOMContentLoaded', function() {
+    Promise.all([
+        fetch('notification/setting.json').then(response => response.json()),
+        fetch('notification/audio_files.json').then(response => response.json())
+    ])
+    .then(([settingsData, audioData]) => {
+        if (!settingsData.reminders) {
+            throw new Error('Invalid data format');
+        }
+        const reminderTable = document.getElementById('reminderTable');
+        settingsData.reminders.forEach(reminder => {
+            const row = reminderTable.insertRow(reminderTable.rows.length - 1);
+            row.insertCell(0).innerText = reminder.condition || '';
+            row.insertCell(1).innerText = reminder.time !== undefined ? reminder.time : '';
+            row.insertCell(2).innerText = audioData[reminder.audio] || reminder.audio || '';
+            const deleteCell = row.insertCell(3);
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'action-btn';
+            deleteButton.innerText = '删除';
+            deleteButton.onclick = function() {
+                reminderTable.deleteRow(row.rowIndex);
+            };
+            deleteCell.appendChild(deleteButton);
+        });
+    })
+    .catch(error => console.error('Error loading settings:', error));
+});
+
 function saveSettingsToCookies() {
     var table = document.getElementById('reminderTable');
     var reminders = [];
