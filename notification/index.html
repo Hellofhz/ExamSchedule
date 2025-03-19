@@ -66,10 +66,10 @@
     <script src="scripts/reminderQueue.js"></script>
     <script src="scripts/script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        function loadReminders() {
             Promise.all([
-                fetch('notification/setting.json').then(response => response.json()),
-                fetch('notification/audio_files.json').then(response => response.json())
+                fetch('setting.json').then(response => response.json()),
+                fetch('audio_files.json').then(response => response.json())
             ])
             .then(([settingsData, audioData]) => {
                 if (!settingsData.reminders) {
@@ -92,7 +92,9 @@
                 });
             })
             .catch(error => console.error('Error loading settings:', error));
-        });
+        }
+
+        document.addEventListener('DOMContentLoaded', loadReminders);
     </script>
 </body>
 </html>
