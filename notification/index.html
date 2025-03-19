@@ -70,13 +70,15 @@
             fetch('notification/setting.json')
                 .then(response => response.json())
                 .then(data => {
-                    // 假设提醒设置数据存储在data.reminders中
+                    if (!data.reminders) {
+                        throw new Error('Invalid data format');
+                    }
                     const reminderTable = document.getElementById('reminderTable');
                     data.reminders.forEach(reminder => {
                         const row = reminderTable.insertRow(reminderTable.rows.length - 1);
-                        row.insertCell(0).innerText = reminder.condition;
-                        row.insertCell(1).innerText = reminder.time;
-                        row.insertCell(2).innerText = reminder.audio;
+                        row.insertCell(0).innerText = reminder.condition || '';
+                        row.insertCell(1).innerText = reminder.time || '';
+                        row.insertCell(2).innerText = reminder.audio || '';
                         const deleteCell = row.insertCell(3);
                         const deleteButton = document.createElement('button');
                         deleteButton.className = 'action-btn';
@@ -87,7 +89,7 @@
                         deleteCell.appendChild(deleteButton);
                     });
                 })
-                .catch(error => console.error('从服务端读取铃声出错:', error));
+                .catch(error => console.error('Error loading settings:', error));
         });
     </script>
 </body>
