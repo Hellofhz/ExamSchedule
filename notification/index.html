@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>考试看板—广播适配</title>
+    <title>诚信考试辅助系统—考试广播</title>
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
 
     <div class="container">
         <div class="control-bar">
-            <button class="control-btn" id="fullscreen-btn" onclick="toggleFullscreen()">全屏</button>
+            
             <button class="control-btn" id="exitFullscreenBtn" onclick="toggleFullscreen()" style="display: none;">退出全屏</button>
         </div>
 
@@ -65,5 +65,30 @@
     <script src="scripts/settings.js"></script>
     <script src="scripts/reminderQueue.js"></script>
     <script src="scripts/script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('setting.json')
+                .then(response => response.json())
+                .then(data => {
+                    // 假设提醒设置数据存储在data.reminders中
+                    const reminderTable = document.getElementById('reminderTable');
+                    data.reminders.forEach(reminder => {
+                        const row = reminderTable.insertRow(reminderTable.rows.length - 1);
+                        row.insertCell(0).innerText = reminder.condition;
+                        row.insertCell(1).innerText = reminder.time;
+                        row.insertCell(2).innerText = reminder.audio;
+                        const deleteCell = row.insertCell(3);
+                        const deleteButton = document.createElement('button');
+                        deleteButton.className = 'action-btn';
+                        deleteButton.innerText = '删除';
+                        deleteButton.onclick = function() {
+                            reminderTable.deleteRow(row.rowIndex);
+                        };
+                        deleteCell.appendChild(deleteButton);
+                    });
+                })
+                .catch(error => console.error('Error loading settings:', error));
+        });
+    </script>
 </body>
 </html>
