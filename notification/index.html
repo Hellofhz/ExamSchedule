@@ -77,7 +77,7 @@
                     data.reminders.forEach(reminder => {
                         const row = reminderTable.insertRow(reminderTable.rows.length - 1);
                         row.insertCell(0).innerText = reminder.condition || '';
-                        row.insertCell(1).innerText = reminder.time || '';
+                        row.insertCell(1).innerText = reminder.time !== undefined ? reminder.time : '';
                         row.insertCell(2).innerText = reminder.audio || '';
                         const deleteCell = row.insertCell(3);
                         const deleteButton = document.createElement('button');
