@@ -67,7 +67,7 @@
     <script src="scripts/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('setting.json')
+            fetch('notification/setting.json')
                 .then(response => response.json())
                 .then(data => {
                     // 假设提醒设置数据存储在data.reminders中
@@ -87,7 +87,7 @@
                         deleteCell.appendChild(deleteButton);
                     });
                 })
-                .catch(error => console.error('Error loading settings:', error));
+                .catch(error => console.error('从服务端读取铃声出错:', error));
         });
     </script>
 </body>
