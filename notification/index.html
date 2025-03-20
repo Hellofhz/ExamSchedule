@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>诚信考试辅助系统—考试广播</title>
+    <title>诚信考试辅助系统-考试广播</title>
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
@@ -15,7 +15,7 @@
 
     <div class="container">
         <div class="control-bar">
-            
+            <button class="control-btn" id="fullscreen-btn" onclick="toggleFullscreen()">全屏</button>
             <button class="control-btn" id="exitFullscreenBtn" onclick="toggleFullscreen()" style="display: none;">退出全屏</button>
         </div>
 
@@ -65,108 +65,5 @@
     <script src="scripts/settings.js"></script>
     <script src="scripts/reminderQueue.js"></script>
     <script src="scripts/script.js"></script>
-    <script>
-        function loadReminders() {
-            Promise.all([
-                fetch('setting.json').then(response => response.json()),
-                fetch('audio_files.json').then(response => response.json())
-            ])
-            .then(([settingsData, audioData]) => {
-                if (!settingsData.reminders) {
-                    throw new Error('Invalid data format');
-                }
-                const reminderTable = document.getElementById('reminderTable');
-                settingsData.reminders.forEach(reminder => {
-                    const row = reminderTable.insertRow(reminderTable.rows.length - 1);
-                    
-                    // 提醒条件
-                    const conditionCell = row.insertCell(0);
-                    const conditionSelect = document.createElement('select');
-                    ['当考试开始时', '当考试结束时', '当距离考试结束时间还有'].forEach(optionText => {
-                        const option = document.createElement('option');
-                        option.value = optionText;
-                        option.text = optionText;
-                        if (reminder.condition === optionText) {
-                            option.selected = true;
-                        }
-                        conditionSelect.appendChild(option);
-                    });
-                    conditionCell.appendChild(conditionSelect);
-
-                    // 时间（分钟）
-                    const timeCell = row.insertCell(1);
-                    const timeInput = document.createElement('input');
-                    timeInput.type = 'number';
-                    timeInput.value = reminder.time !== undefined ? reminder.time : '';
-                    timeCell.appendChild(timeInput);
-
-                    // 音频选择
-                    const audioCell = row.insertCell(2);
-                    const audioSelect = document.createElement('select');
-                    Object.keys(audioData).forEach(audioKey => {
-                        const option = document.createElement('option');
-                        option.value = audioKey;
-                        option.text = audioData[audioKey];
-                        if (reminder.audio === audioKey) {
-                            option.selected = true;
-                        }
-                        audioSelect.appendChild(option);
-                    });
-                    audioCell.appendChild(audioSelect);
-
-                    // 删除按钮
-                    const deleteCell = row.insertCell(3);
-                    const deleteButton = document.createElement('button');
-                    deleteButton.className = 'action-btn';
-                    deleteButton.innerText = '删除';
-                    deleteButton.onclick = function() {
-                        reminderTable.deleteRow(row.rowIndex);
-                    };
-                    deleteCell.appendChild(deleteButton);
-                });
-            })
-            .catch(error => console.error('Error loading settings:', error));
-        }
-
-        function addReminder() {
-            const reminderTable = document.getElementById('reminderTable');
-            const row = reminderTable.insertRow(reminderTable.rows.length - 1);
-
-            const conditionCell = row.insertCell(0);
-            const conditionInput = document.createElement('input');
-            conditionInput.type = 'text';
-            conditionCell.appendChild(conditionInput);
-
-            const timeCell = row.insertCell(1);
-            const timeInput = document.createElement('input');
-            timeInput.type = 'number';
-            timeCell.appendChild(timeInput);
-
-            const audioCell = row.insertCell(2);
-            const audioSelect = document.createElement('select');
-            fetch('audio_files.json')
-                .then(response => response.json())
-                .then(audioData => {
-                    Object.keys(audioData).forEach(audioKey => {
-                        const option = document.createElement('option');
-                        option.value = audioKey;
-                        option.text = audioData[audioKey];
-                        audioSelect.appendChild(option);
-                    });
-                });
-            audioCell.appendChild(audioSelect);
-
-            const deleteCell = row.insertCell(3);
-            const deleteButton = document.createElement('button');
-            deleteButton.className = 'action-btn';
-            deleteButton.innerText = '删除';
-            deleteButton.onclick = function() {
-                reminderTable.deleteRow(row.rowIndex);
-            };
-            deleteCell.appendChild(deleteButton);
-        }
-
-        document.addEventListener('DOMContentLoaded', loadReminders);
-    </script>
 </body>
 </html>
