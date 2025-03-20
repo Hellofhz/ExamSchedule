@@ -1,6 +1,6 @@
 # ExamSchedule
 
-网页版ExamShowboard
+诚信考试辅助系统
 ![es](./doc/es.png)
 
 ## 功能
