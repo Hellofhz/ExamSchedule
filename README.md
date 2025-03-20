@@ -1,4 +1,4 @@
-# ExamSchedule
+# 诚信考试辅助系统
 
 诚信考试辅助系统
 ![es](./doc/es.png)
