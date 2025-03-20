@@ -79,31 +79,42 @@
                 settingsData.reminders.forEach(reminder => {
                     const row = reminderTable.insertRow(reminderTable.rows.length - 1);
                     
+                    // 提醒条件
                     const conditionCell = row.insertCell(0);
-                    const conditionInput = document.createElement('input');
-                    conditionInput.type = 'text';
-                    conditionInput.value = reminder.condition || '';
-                    conditionCell.appendChild(conditionInput);
+                    const conditionSelect = document.createElement('select');
+                    ['当考试开始时', '当考试结束时', '当距离考试结束时间还有'].forEach(optionText => {
+                        const option = document.createElement('option');
+                        option.value = optionText;
+                        option.text = optionText;
+                        if (reminder.condition === optionText) {
+                            option.selected = true;
+                        }
+                        conditionSelect.appendChild(option);
+                    });
+                    conditionCell.appendChild(conditionSelect);
 
+                    // 时间（分钟）
                     const timeCell = row.insertCell(1);
                     const timeInput = document.createElement('input');
                     timeInput.type = 'number';
                     timeInput.value = reminder.time !== undefined ? reminder.time : '';
                     timeCell.appendChild(timeInput);
 
+                    // 音频选择
                     const audioCell = row.insertCell(2);
                     const audioSelect = document.createElement('select');
                     Object.keys(audioData).forEach(audioKey => {
                         const option = document.createElement('option');
                         option.value = audioKey;
                         option.text = audioData[audioKey];
-                        if (audioKey === reminder.audio) {
+                        if (reminder.audio === audioKey) {
                             option.selected = true;
                         }
                         audioSelect.appendChild(option);
                     });
                     audioCell.appendChild(audioSelect);
 
+                    // 删除按钮
                     const deleteCell = row.insertCell(3);
                     const deleteButton = document.createElement('button');
                     deleteButton.className = 'action-btn';
