@@ -117,6 +117,44 @@
             .catch(error => console.error('Error loading settings:', error));
         }
 
+        function addReminder() {
+            const reminderTable = document.getElementById('reminderTable');
+            const row = reminderTable.insertRow(reminderTable.rows.length - 1);
+
+            const conditionCell = row.insertCell(0);
+            const conditionInput = document.createElement('input');
+            conditionInput.type = 'text';
+            conditionCell.appendChild(conditionInput);
+
+            const timeCell = row.insertCell(1);
+            const timeInput = document.createElement('input');
+            timeInput.type = 'number';
+            timeCell.appendChild(timeInput);
+
+            const audioCell = row.insertCell(2);
+            const audioSelect = document.createElement('select');
+            fetch('audio_files.json')
+                .then(response => response.json())
+                .then(audioData => {
+                    Object.keys(audioData).forEach(audioKey => {
+                        const option = document.createElement('option');
+                        option.value = audioKey;
+                        option.text = audioData[audioKey];
+                        audioSelect.appendChild(option);
+                    });
+                });
+            audioCell.appendChild(audioSelect);
+
+            const deleteCell = row.insertCell(3);
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'action-btn';
+            deleteButton.innerText = '删除';
+            deleteButton.onclick = function() {
+                reminderTable.deleteRow(row.rowIndex);
+            };
+            deleteCell.appendChild(deleteButton);
+        }
+
         document.addEventListener('DOMContentLoaded', loadReminders);
     </script>
 </body>
