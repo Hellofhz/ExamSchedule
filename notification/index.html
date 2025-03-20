@@ -65,5 +65,34 @@
     <script src="scripts/settings.js"></script>
     <script src="scripts/reminderQueue.js"></script>
     <script src="scripts/script.js"></script>
+    <script>
+        function exportConfig() {
+            const config = {
+                reminders: getReminders() // 获取提醒设置
+            };
+            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'config.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function getReminders() {
+            const reminders = [];
+            const rows = document.querySelectorAll('#reminderTable tr');
+            rows.forEach((row, index) => {
+                if (index === 0 || index === rows.length - 1) return; // 跳过表头和最后一行
+                const cells = row.querySelectorAll('td');
+                reminders.push({
+                    condition: cells[0].innerText,
+                    time: cells[1].innerText,
+                    audio: cells[2].innerText
+                });
+            });
+            return reminders;
+        }
+    </script>
 </body>
 </html>
