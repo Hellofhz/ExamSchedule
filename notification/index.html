@@ -70,7 +70,7 @@
             fetch('reminders.json')
                 .then(response => response.json())
                 .then(config => {
-                    if (config.reminders) {
+                    if (Array.isArray(config.reminders)) {
                         const reminderTable = document.getElementById('reminderTable');
                         // Clear existing reminders
                         while (reminderTable.rows.length > 2) {
@@ -79,9 +79,9 @@
                         // Add imported reminders
                         config.reminders.forEach(reminder => {
                             const newRow = reminderTable.insertRow(reminderTable.rows.length - 1);
-                            newRow.insertCell(0).innerText = reminder.condition;
-                            newRow.insertCell(1).innerText = reminder.time;
-                            newRow.insertCell(2).innerText = reminder.audio;
+                            newRow.insertCell(0).innerText = reminder.condition.trim();
+                            newRow.insertCell(1).innerText = reminder.time.trim();
+                            newRow.insertCell(2).innerText = reminder.audio.trim();
                             const deleteCell = newRow.insertCell(3);
                             deleteCell.innerHTML = '<button class="action-btn" onclick="deleteReminder(this)">删除</button>';
                         });
