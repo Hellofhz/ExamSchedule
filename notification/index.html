@@ -84,11 +84,31 @@
                             newRow.insertCell(2).innerText = reminder.audio.trim();
                             const deleteCell = newRow.insertCell(3);
                             deleteCell.innerHTML = '<button class="action-btn" onclick="deleteReminder(this)">删除</button>';
+                            // Ensure audio is set up for the reminder
+                            setupAudio(reminder.audio.trim());
                         });
                     }
                 })
                 .catch(error => console.error('Error loading reminders:', error));
         });
+
+        function setupAudio(audioFile) {
+            const audio = new Audio(audioFile);
+            audio.load();
+            // Store the audio object for later use
+            if (!window.reminderAudios) {
+                window.reminderAudios = {};
+            }
+            window.reminderAudios[audioFile] = audio;
+        }
+
+        function playAudio(audioFile) {
+            if (window.reminderAudios && window.reminderAudios[audioFile]) {
+                window.reminderAudios[audioFile].play();
+            } else {
+                console.error('Audio file not found:', audioFile);
+            }
+        }
 
         function deleteReminder(button) {
             const row = button.parentNode.parentNode;
