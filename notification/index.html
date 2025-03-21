@@ -1,55 +1,69 @@
-function saveSettingsToCookies() {
-    var table = document.getElementById('reminderTable');
-    var reminders = [];
-    for (var i = 1; i < table.rows.length - 1; i++) {
-        var row = table.rows[i];
-        var condition = row.cells[0].querySelector('select').value;
-        var timeInput = row.cells[1].querySelector('input');
-        var audioSelect = row.cells[2].querySelector('select');
-        if (timeInput && audioSelect) {
-            var time = timeInput.value || 0; // 确保时间值不为空
-            var audio = audioSelect.value || 'classStart'; // 确保音频选择不为空
-            reminders.push({ condition: condition, time: time, audio: audio });
-        }
-    }
-    document.cookie = "reminders=" + JSON.stringify(reminders);
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>考试看板—广播适配</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+    <div class="info-container">
+        <div class="info-content" id="infoMessage"></div>
+    </div>
+    <div class="error-container">
+        <div class="error-content" id="errorMessage"></div>
+    </div>
 
-function loadSettingsFromCookies() {
-    var cookies = document.cookie.split(';');
-    cookies.forEach(function(cookie) {
-        var parts = cookie.split('=');
-        var name = parts[0].trim();
-        var value = parts[1].trim();
-        if (name === 'reminders') {
-            var reminders = JSON.parse(value);
-            var table = document.getElementById('reminderTable');
-            reminders.forEach(function(reminder) {
-                var row = table.insertRow(table.rows.length - 1);
-                row.innerHTML = `
-                    <td>
-                        <select>
-                            <option value="beforeStart" ${reminder.condition === 'beforeStart' ? 'selected' : ''}>当距离考试开始时间还有</option>
-                            <option value="beforeEnd" ${reminder.condition === 'beforeEnd' ? 'selected' : ''}>当距离考试结束时间还有</option>
-                            <option value="afterEnd" ${reminder.condition === 'afterEnd' ? 'selected' : ''}>当考试结束后</option>
-                            <option value="start" ${reminder.condition === 'start' ? 'selected' : ''}>当考试开始时</option>
-                            <option value="end" ${reminder.condition === 'end' ? 'selected' : ''}>当考试结束时</option>
-                        </select>
-                    </td>
-                    <td><input type="number" value="${reminder.time}" placeholder="${reminder.condition === 'start' || reminder.condition === 'end' ? '-' : '分钟'}" ${reminder.condition === 'start' || reminder.condition === 'end' ? 'disabled' : ''}></td>
-                    <td>
-                        <select>
-                            <option value="classStart" ${reminder.audio === 'classStart' ? 'selected' : ''}>考试开始铃声</option>
-                            <option value="classEnd" ${reminder.audio === 'classEnd' ? 'selected' : ''}>考试结束铃声</option>
-                        </select>
-                    </td>
-                    <td><button onclick="removeReminder(this)">删除</button></td>
-                `;
-                row.cells[0].querySelector('select').addEventListener('change', function() {
-                    row.cells[1].querySelector('input').disabled = this.value === 'start' || this.value === 'end';
-                    row.cells[1].querySelector('input').placeholder = this.value === 'start' || this.value === 'end' ? '-' : '分钟';
-                });
-            });
-        }
-    });
-}
+    <div class="container">
+        <div class="control-bar">
+            <button class="control-btn" id="fullscreen-btn" onclick="toggleFullscreen()">全屏</button>
+            <button class="control-btn" id="exitFullscreenBtn" onclick="toggleFullscreen()" style="display: none;">退出全屏</button>
+        </div>
+
+        <div class="status-box">
+            <div class="status-label" id="statusLabel">正在初始化...</div>
+            <div class="time-display" id="timeDisplay">--:--</div>
+            <div id="timeDescription" style="text-align:center;color:#a4b0be;"></div>
+        </div>
+
+        <div class="settings-panel">
+            <h3>系统设置</h3>
+            <div class="button-group">
+                <label class="file-input-label">
+                    <input type="file" id="importJson" accept=".json" multiple> 导入考试配置
+                </label>
+                <button class="action-btn" onclick="exportConfig()">导出配置</button>
+            </div>
+            <h3>提醒设置</h3>
+            <table class="reminder-table" id="reminderTable">
+                <tr>
+                    <th>提醒条件</th>
+                    <th>时间（分钟）</th>
+                    <th>音频选择</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td colspan="4"><button class="action-btn" onclick="addReminder()">添加提醒</button></td>
+                </tr>
+            </table>
+            <button class="action-btn" onclick="saveConfig()">保存提醒设置</button>
+        </div>
+
+        <table class="schedule-table" id="scheduleTable">
+            <tr>
+                <th>科目</th>
+                <th>时间段</th>
+                <th>状态</th>
+            </tr>
+        </table>
+    </div>
+
+    <script src="scripts/errorSystem.js"></script>
+    <script src="scripts/audioController.js"></script>
+    <script src="scripts/courseSchedule.js"></script>
+    <script src="scripts/display.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="scripts/settings.js"></script>
+    <script src="scripts/reminderQueue.js"></script>
+    <script src="scripts/script.js"></script>
+</body>
+</html>
