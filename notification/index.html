@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>诚信考试辅助系统-考试广播</title>
+    <title>考试看板—广播适配</title>
     <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
@@ -67,31 +67,29 @@
     <script src="scripts/script.js"></script>
     <script>
         function exportConfig() {
+            const reminders = [];
+            const reminderRows = document.querySelectorAll('#reminderTable tr');
+            reminderRows.forEach((row, index) => {
+                if (index === 0 || index === reminderRows.length - 1) return; // Skip header and add button row
+                const cells = row.querySelectorAll('td');
+                const condition = cells[0].innerText;
+                const time = cells[1].innerText;
+                const audio = cells[2].innerText;
+                reminders.push({ condition, time, audio });
+            });
+
             const config = {
-                reminders: getReminders() // 获取提醒设置
+                reminders: reminders,
+                // ...other config data...
             };
-            const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
+
+            const blob = new Blob([JSON.stringify(config, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = 'config.json';
             a.click();
             URL.revokeObjectURL(url);
-        }
-
-        function getReminders() {
-            const reminders = [];
-            const rows = document.querySelectorAll('#reminderTable tr');
-            rows.forEach((row, index) => {
-                if (index === 0 || index === rows.length - 1) return; // 跳过表头和最后一行
-                const cells = row.querySelectorAll('td');
-                reminders.push({
-                    condition: cells[0].innerText,
-                    time: cells[1].innerText,
-                    audio: cells[2].innerText
-                });
-            });
-            return reminders;
         }
     </script>
 </body>
