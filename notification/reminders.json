@@ -2,17 +2,17 @@
     "reminders": [
         {
             "condition": "考试开始",
-            "time": 0,
+            "time": "0",
             "audio": "audio/start.mp3"
         },
         {
             "condition": "距离结束还有15分钟",
-            "time": 15,
+            "time": "15",
             "audio": "audio/15min_left.mp3"
         },
         {
             "condition": "考试结束",
-            "time": 0,
+            "time": "0",
             "audio": "audio/end.mp3"
         }
     ]
