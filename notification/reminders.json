@@ -1,0 +1,19 @@
+{
+    "reminders": [
+        {
+            "condition": "当考试开始时",
+            "time": 0,
+            "audio": "start.mp3"
+        },
+        {
+            "condition": "当距离考试结束时间还有",
+            "time": 15,
+            "audio": "15min_left.mp3"
+        },
+        {
+            "condition": "当考试结束时",
+            "time": 0,
+            "audio": "end.mp3"
+        }
+    ]
+}
